@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Infrastructure/Infrastructure.csproj" Id="307f7d34-c4e1-4696-8174-9923ff8ea720" />
+  <Project Path="MiddleEarthCompendium/MiddleEarthCompendium.csproj" />
+</Solution>
