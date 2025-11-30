@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MiddleEarthCompendium.Models.Responses
+namespace Infrastructure.Models.Responses
 {
     public class ApiResponse<T>
     {

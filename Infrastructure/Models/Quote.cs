@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MiddleEarthCompendium.Models
+namespace Infrastructure.Models
 {
     public class Quote
     {
