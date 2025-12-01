@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MiddleEarthCompendium.ViewModels"
+             xmlns:models="clr-namespace:Infrastructure.Models;assembly=Infrastructure"
+             x:Class="MiddleEarthCompendium.Views.CharactersPage"
+             x:DataType="viewmodels:CharactersViewModel">
+
+    <Grid>
+        <!-- Background Map -->
+        <Image Source="middleearth.png" 
+               Aspect="AspectFill"/>
+
+        <!-- Content -->
+        <Grid Padding="16" RowDefinitions="Auto,*">
+
+            <!-- Title -->
+            <Label Grid.Row="0"
+                   Text="Characters"
+                   FontFamily="Ringbearer"
+                   FontSize="32"
+                   TextColor="{StaticResource Primary}"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,16"/>
+
+            <!-- Characters List -->
+            <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding Characters}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Character">
+                        <Border Margin="0,0,0,8" 
+                            Padding="12" 
+                            BackgroundColor="{StaticResource CardBackground}"
+                            Stroke="{StaticResource Primary}"
+                            StrokeShape="RoundRectangle 8">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout Grid.Column="0">
+                                    <Label Text="{Binding Name}" 
+                                       FontSize="18" 
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"/>
+                                    <Label Text="{Binding Race}" 
+                                       FontSize="14" 
+                                       TextColor="{StaticResource TextSecondary}"/>
+                                </VerticalStackLayout>
+                                <Label Grid.Column="1" 
+                                   Text="{Binding Gender}" 
+                                   VerticalOptions="Center"
+                                   TextColor="{StaticResource TextSecondary}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label Text="No characters found" 
+                               FontSize="18" 
+                               TextColor="{StaticResource TextSecondary}"/>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator Grid.Row="1"
+                               IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Color="{StaticResource Primary}"/>
+        </Grid>
+    </Grid>
+
+</ContentPage>
