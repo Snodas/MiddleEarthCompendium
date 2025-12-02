@@ -12,7 +12,7 @@
                Aspect="AspectFill"/>
 
         <!-- Content -->
-        <Grid Padding="16" RowDefinitions="Auto,*">
+        <Grid Padding="16" RowDefinitions="Auto,Auto,Auto,*">
 
             <!-- Title -->
             <Label Grid.Row="0"
@@ -21,32 +21,78 @@
                    FontSize="32"
                    TextColor="{StaticResource Primary}"
                    HorizontalOptions="Center"
-                   Margin="0,0,0,16"/>
+                   Margin="0,0,0,8"/>
+
+            <!-- Search Bar -->
+            <Border Grid.Row="1"
+                    BackgroundColor="{StaticResource CardBackground}"
+                    Stroke="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="4"
+                    Margin="0,0,0,8">
+                <Entry Placeholder="Search characters..."
+                       Text="{Binding SearchText}"
+                       TextColor="{StaticResource TextPrimary}"
+                       PlaceholderColor="{StaticResource TextSecondary}"/>
+            </Border>
+
+            <!-- Filters -->
+            <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,0,0,16">
+                <!-- Race Filter -->
+                <Border Grid.Column="0"
+                        BackgroundColor="{StaticResource CardBackground}"
+                        Stroke="{StaticResource Primary}"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="8">
+                    <Picker Title="Race"
+                            ItemsSource="{Binding Races}"
+                            SelectedItem="{Binding SelectedRace}"
+                            TextColor="{StaticResource TextPrimary}"
+                            TitleColor="{StaticResource TextSecondary}"/>
+                </Border>
+
+                <!-- Sort Order -->
+                <Border Grid.Column="1"
+                        BackgroundColor="{StaticResource CardBackground}"
+                        Stroke="{StaticResource Primary}"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="8">
+                    <Picker Title="Sort"
+                            ItemsSource="{Binding SortOptions}"
+                            SelectedItem="{Binding SelectedSort}"
+                            TextColor="{StaticResource TextPrimary}"
+                            TitleColor="{StaticResource TextSecondary}"/>
+                </Border>
+            </Grid>
 
             <!-- Characters List -->
-            <CollectionView Grid.Row="1"
+            <CollectionView Grid.Row="3"
                             ItemsSource="{Binding Characters}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Character">
                         <Border Margin="0,0,0,8" 
-                            Padding="12" 
-                            BackgroundColor="{StaticResource CardBackground}"
-                            Stroke="{StaticResource Primary}"
-                            StrokeShape="RoundRectangle 8">
+                                Padding="12" 
+                                BackgroundColor="{StaticResource CardBackground}"
+                                Stroke="{StaticResource Primary}"
+                                StrokeShape="RoundRectangle 8">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:CharactersViewModel}}, Path=GoToDetailCommand}"
+                                                      CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
                             <Grid ColumnDefinitions="*,Auto">
                                 <VerticalStackLayout Grid.Column="0">
                                     <Label Text="{Binding Name}" 
-                                       FontSize="18" 
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextPrimary}"/>
+                                           FontSize="18" 
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource TextPrimary}"/>
                                     <Label Text="{Binding Race}" 
-                                       FontSize="14" 
-                                       TextColor="{StaticResource TextSecondary}"/>
+                                           FontSize="14" 
+                                           TextColor="{StaticResource TextSecondary}"/>
                                 </VerticalStackLayout>
                                 <Label Grid.Column="1" 
-                                   Text="{Binding Gender}" 
-                                   VerticalOptions="Center"
-                                   TextColor="{StaticResource TextSecondary}"/>
+                                       Text="{Binding Gender}" 
+                                       VerticalOptions="Center"
+                                       TextColor="{StaticResource TextSecondary}"/>
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -62,7 +108,7 @@
             </CollectionView>
 
             <!-- Loading Indicator -->
-            <ActivityIndicator Grid.Row="1"
+            <ActivityIndicator Grid.RowSpan="4"
                                IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
                                HorizontalOptions="Center"

@@ -3,6 +3,12 @@
     x:Class="MiddleEarthCompendium.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Shell.FlyoutBehavior="Disabled">
+    xmlns:local="clr-namespace:MiddleEarthCompendium"
+    xmlns:views="clr-namespace:MiddleEarthCompendium.Views"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False">
+
+    <ShellContent Route="main" ContentTemplate="{DataTemplate local:MainPage}"/>
+    <ShellContent Route="characters" ContentTemplate="{DataTemplate views:CharactersPage}"/>
 
 </Shell>

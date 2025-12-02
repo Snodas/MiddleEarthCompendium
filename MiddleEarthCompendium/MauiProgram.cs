@@ -44,6 +44,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<App>();
 
         //viewmodels
+        builder.Services.AddTransient<MainViewModel>();
         builder.Services.AddTransient<CharactersViewModel>();
         builder.Services.AddTransient<CharacterDetailViewModel>();
         builder.Services.AddTransient<MoviesViewModel>();
@@ -51,7 +52,9 @@ public static class MauiProgram
         builder.Services.AddTransient<QuotesViewModel>();
 
         //pages
+        builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<CharactersPage>();
+        builder.Services.AddTransient<CharacterDetailPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

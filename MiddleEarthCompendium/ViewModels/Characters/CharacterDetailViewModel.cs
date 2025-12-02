@@ -12,6 +12,7 @@ namespace MiddleEarthCompendium.ViewModels.Characters
     public partial class CharacterDetailViewModel : BaseViewModel
     {
         private readonly ILotrApiService _lotrApiService;
+        private readonly IWikiScraperService _wikiScraperService;
 
         [ObservableProperty]
         private Character? _character;
@@ -19,9 +20,19 @@ namespace MiddleEarthCompendium.ViewModels.Characters
         [ObservableProperty]
         private ObservableCollection<Quote> _quotes = [];
 
-        public CharacterDetailViewModel(ILotrApiService lotrApiService)
+        [ObservableProperty]
+        private string? _characterImageUrl;
+
+        [ObservableProperty]
+        private string? _characterBio;
+
+        [ObservableProperty]
+        private bool _isLoadingWiki;
+
+        public CharacterDetailViewModel(ILotrApiService lotrApiService, IWikiScraperService wikiScraperService)
         {
             _lotrApiService = lotrApiService;
+            _wikiScraperService = wikiScraperService;
         }
 
         [RelayCommand]
@@ -32,16 +43,34 @@ namespace MiddleEarthCompendium.ViewModels.Characters
             try
             {
                 IsBusy = true;
+                IsLoadingWiki = true;
+                CharacterImageUrl = null;
+                CharacterBio = null;
 
-                Character = await _lotrApiService.GetCharacterAsync(characterId);
+                var characterTask = _lotrApiService.GetCharacterAsync(characterId);
+                var quotesTask = _lotrApiService.GetCharacterQuotesAsync(characterId);
+
+                Character = await characterTask;
                 Title = Character?.Name ?? "Character";
 
-                var quotes = await _lotrApiService.GetCharacterQuotesAsync(characterId);
+                var wikiTask = !string.IsNullOrEmpty(Character?.WikiUrl)
+                    ? _wikiScraperService.GetCharacterInfoAsync(Character.WikiUrl)
+                    : Task.FromResult<WikiCharacterInfo?>(null);
 
+                var quotes = await quotesTask;
                 Quotes.Clear();
                 foreach (var quote in quotes)
                 {
                     Quotes.Add(quote);
+                }
+
+                IsBusy = false;
+
+                var wikiInfo = await wikiTask;
+                if (wikiInfo != null)
+                {
+                    CharacterImageUrl = wikiInfo.ImageUrl;
+                    CharacterBio = wikiInfo.Bio;
                 }
             }
             catch (Exception ex)
@@ -51,6 +80,16 @@ namespace MiddleEarthCompendium.ViewModels.Characters
             finally
             {
                 IsBusy = false;
+                IsLoadingWiki = false;
+            }
+        }
+
+        [RelayCommand]
+        private async Task OpenWikiAsync()
+        {
+            if (!string.IsNullOrEmpty(Character?.WikiUrl))
+            {
+                await Browser.Default.OpenAsync(Character.WikiUrl, BrowserLaunchMode.SystemPreferred);
             }
         }
     }

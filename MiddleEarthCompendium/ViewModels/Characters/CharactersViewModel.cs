@@ -12,6 +12,7 @@ namespace MiddleEarthCompendium.ViewModels
     public partial class CharactersViewModel : BaseViewModel
     {
         private readonly ILotrApiService _lotrApiService;
+        private List<Character> _allCharacters = [];
 
         [ObservableProperty]
         private ObservableCollection<Character> _characters = [];
@@ -20,7 +21,10 @@ namespace MiddleEarthCompendium.ViewModels
         private string _selectedRace = "All";
 
         [ObservableProperty]
-        private Character? _selectedCharacter;
+        private string _selectedSort = "A-Z";
+
+        [ObservableProperty]
+        private string _searchText = string.Empty;
 
         public List<string> Races { get; } =
         [
@@ -32,6 +36,12 @@ namespace MiddleEarthCompendium.ViewModels
             "Maiar",
             "Orc",
             "Dragon"
+        ];
+
+        public List<string> SortOptions { get; } =
+        [
+            "A-Z",
+            "Z-A"
         ];
 
         public CharactersViewModel(ILotrApiService lotrApiService)
@@ -48,22 +58,13 @@ namespace MiddleEarthCompendium.ViewModels
             try
             {
                 IsBusy = true;
-                List<Character> characters;
 
-                if (SelectedRace == "All")
+                if (_allCharacters.Count == 0)
                 {
-                    characters = await _lotrApiService.GetCharactersAsync(500);
-                }
-                else
-                {
-                    characters = await _lotrApiService.GetCharactersByRaceAsync(SelectedRace);
+                    _allCharacters = await _lotrApiService.GetCharactersAsync(1000);
                 }
 
-                Characters.Clear();
-                foreach (var character in characters)
-                {
-                    Characters.Add(character);
-                }
+                ApplyFilters();
             }
             catch (Exception ex)
             {
@@ -75,10 +76,57 @@ namespace MiddleEarthCompendium.ViewModels
             }
         }
 
-        partial void OnSelectedRaceChanged(string value)
+        private void ApplyFilters()
         {
-            LoadCharactersCommand.Execute(null);
+            var filtered = _allCharacters.AsEnumerable();
+
+            if (SelectedRace != "All")
+            {
+                filtered = filtered.Where(c => !string.IsNullOrEmpty(c.Race) &&
+                                               c.Race.Equals(SelectedRace, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                filtered = filtered.Where(c => !string.IsNullOrEmpty(c.Name) &&
+                                               c.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
+            }
+
+            filtered = SelectedSort == "A-Z"
+                ? filtered.OrderBy(c => c.Name ?? string.Empty)
+                : filtered.OrderByDescending(c => c.Name ?? string.Empty);
+
+            Characters.Clear();
+            foreach (var character in filtered)
+            {
+                Characters.Add(character);
+            }
         }
 
+        [RelayCommand]
+        private async Task GoToDetailAsync(Character character)
+        {
+            if (character == null) return;
+
+            await Shell.Current.GoToAsync($"characterdetail?id={character._id}");
+        }
+
+        partial void OnSelectedRaceChanged(string value)
+        {
+            if (_allCharacters.Count > 0)
+                ApplyFilters();
+        }
+
+        partial void OnSelectedSortChanged(string value)
+        {
+            if (_allCharacters.Count > 0)
+                ApplyFilters();
+        }
+
+        partial void OnSearchTextChanged(string value)
+        {
+            if (_allCharacters.Count > 0)
+                ApplyFilters();
+        }
     }
 }

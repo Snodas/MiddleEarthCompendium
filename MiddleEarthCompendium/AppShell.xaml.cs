@@ -4,16 +4,11 @@ namespace MiddleEarthCompendium
 {
     public partial class AppShell : Shell
     {
-        public AppShell(CharactersPage charactersPage)
+        public AppShell(IServiceProvider serviceProvider)
         {
             InitializeComponent();
 
-            Items.Add(new ShellContent
-            {
-                Title = "Characters",
-                Route = "characters",
-                Content = charactersPage
-            });
+            Routing.RegisterRoute("characterdetail", typeof(CharacterDetailPage));
         }
     }
 }

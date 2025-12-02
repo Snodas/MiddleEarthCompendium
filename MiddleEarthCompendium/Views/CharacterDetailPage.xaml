@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MiddleEarthCompendium.ViewModels.Characters"
+             xmlns:models="clr-namespace:Infrastructure.Models;assembly=Infrastructure"
+             x:Class="MiddleEarthCompendium.Views.CharacterDetailPage"
+             x:DataType="viewmodels:CharacterDetailViewModel">
+
+    <Grid>
+        <!-- Background Map -->
+        <Image Source="middleearth.png" 
+               Aspect="AspectFill"/>
+
+        <ScrollView>
+            <Grid Padding="16" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*">
+
+                <!-- Character Name -->
+                <Label Grid.Row="0"
+                       Text="{Binding Character.Name}"
+                       FontFamily="Ringbearer"
+                       FontSize="32"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center"
+                       Margin="0,0,0,16"/>
+
+                <!-- Character Image -->
+                <Border Grid.Row="1"
+                    BackgroundColor="{StaticResource CardBackground}"
+                    Stroke="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 8"
+                    HeightRequest="200"
+                    WidthRequest="200"
+                    HorizontalOptions="Center"
+                    Margin="0,0,0,16">
+                    <Grid>
+                        <!-- Loading spinner for image -->
+                        <ActivityIndicator IsRunning="{Binding IsLoadingWiki}"
+                           IsVisible="{Binding IsLoadingWiki}"
+                           Color="{StaticResource Primary}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+
+                        <!-- Actual image -->
+                        <Image Source="{Binding CharacterImageUrl}"
+                               Aspect="AspectFill"
+                               IsVisible="{Binding CharacterImageUrl, Converter={StaticResource StringNotEmptyConverter}}"/>
+                    </Grid>
+                </Border>
+
+                <!-- Character Info Card -->
+                <Border Grid.Row="2"
+                        BackgroundColor="{StaticResource CardBackground}"
+                        Stroke="{StaticResource Primary}"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="16"
+                        Margin="0,0,0,8">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" 
+                          ColumnDefinitions="Auto,*" 
+                          RowSpacing="8" 
+                          ColumnSpacing="16">
+
+                        <Label Grid.Row="0" Grid.Column="0" Text="Race:" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Character.Race}" TextColor="{StaticResource TextPrimary}"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" Text="Gender:" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding Character.Gender}" TextColor="{StaticResource TextPrimary}"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" Text="Birth:" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding Character.Birth, Converter={StaticResource DateFormatConverter}}" TextColor="{StaticResource TextPrimary}"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" Text="Death:" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding Character.Death, Converter={StaticResource DateFormatConverter}}" TextColor="{StaticResource TextPrimary}"/>
+
+                        <Label Grid.Row="4" Grid.Column="0" Text="Realm:" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="4" Grid.Column="1" Text="{Binding Character.Realm}" TextColor="{StaticResource TextPrimary}"/>
+
+                        <Label Grid.Row="5" Grid.Column="0" Text="Spouse:" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="5" Grid.Column="1" Text="{Binding Character.Spouse}" TextColor="{StaticResource TextPrimary}"/>
+                    </Grid>
+                </Border>
+
+                <!-- Bio -->
+                <Border Grid.Row="3"
+                        BackgroundColor="{StaticResource CardBackground}"
+                        Stroke="{StaticResource Primary}"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="16"
+                        Margin="0,0,0,8">
+                    <Grid>
+                        <!-- Loading text -->
+                        <Label Text="Loading bio..."
+                               TextColor="{StaticResource TextSecondary}"
+                               FontAttributes="Italic"
+                               IsVisible="{Binding IsLoadingWiki}"/>
+
+                        <!-- Actual bio -->
+                        <Label Text="{Binding CharacterBio}" 
+                               TextColor="{StaticResource TextPrimary}"
+                               LineBreakMode="WordWrap"
+                               IsVisible="{Binding CharacterBio, Converter={StaticResource StringNotEmptyConverter}}"/>
+                    </Grid>
+                </Border>
+
+                <!-- Wiki Button -->
+                <Button Grid.Row="4"
+                        Text="View on Wiki"
+                        Command="{Binding OpenWikiCommand}"
+                        BackgroundColor="{StaticResource CardBackground}"
+                        TextColor="{StaticResource Primary}"
+                        BorderColor="{StaticResource Primary}"
+                        BorderWidth="1"
+                        CornerRadius="8"
+                        Margin="0,0,0,16"/>
+
+                <!-- Quotes Header -->
+                <Label Grid.Row="5"
+                       Text="Quotes"
+                       FontFamily="Ringbearer"
+                       FontSize="24"
+                       TextColor="{StaticResource Primary}"
+                       Margin="0,0,0,8"/>
+
+                <!-- Quotes List -->
+                <CollectionView Grid.Row="6"
+                                ItemsSource="{Binding Quotes}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Quote">
+                            <Border Margin="0,0,0,8" 
+                                    Padding="12" 
+                                    BackgroundColor="{StaticResource CardBackground}"
+                                    Stroke="{StaticResource Primary}"
+                                    StrokeShape="RoundRectangle 8">
+                                <Label Text="{Binding Dialog}" 
+                                       TextColor="{StaticResource TextPrimary}"
+                                       FontAttributes="Italic"/>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                    <CollectionView.EmptyView>
+                        <Label Text="No quotes found for this character" 
+                               TextColor="{StaticResource TextSecondary}"
+                               HorizontalOptions="Center"
+                               Margin="0,20,0,0"/>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </Grid>
+        </ScrollView>
+
+        <!-- Loading Indicator -->
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Color="{StaticResource Primary}"/>
+    </Grid>
+
+</ContentPage>
