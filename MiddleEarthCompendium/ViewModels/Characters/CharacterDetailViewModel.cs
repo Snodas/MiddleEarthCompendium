@@ -2,17 +2,16 @@
 using CommunityToolkit.Mvvm.Input;
 using Infrastructure.Models;
 using Infrastructure.Services.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace MiddleEarthCompendium.ViewModels.Characters
 {
     public partial class CharacterDetailViewModel : BaseViewModel
     {
         private readonly ILotrApiService _lotrApiService;
-        private readonly IWikiScraperService _wikiScraperService;
+        private readonly IWikiApiService _wikiApiService;
+        private readonly Random _random = new();
+        private List<Quote> _allQuotes = [];
 
         [ObservableProperty]
         private Character? _character;
@@ -29,10 +28,22 @@ namespace MiddleEarthCompendium.ViewModels.Characters
         [ObservableProperty]
         private bool _isLoadingWiki;
 
-        public CharacterDetailViewModel(ILotrApiService lotrApiService, IWikiScraperService wikiScraperService)
+        [ObservableProperty]
+        private bool _hasNoImage;
+
+        [ObservableProperty]
+        private bool _hasNoBio;
+
+        [ObservableProperty]
+        private string _quotesHeader = "Quotes";
+
+        [ObservableProperty]
+        private bool _hasMoreQuotes;
+
+        public CharacterDetailViewModel(ILotrApiService lotrApiService, IWikiApiService wikiApiService)
         {
             _lotrApiService = lotrApiService;
-            _wikiScraperService = wikiScraperService;
+            _wikiApiService = wikiApiService;
         }
 
         [RelayCommand]
@@ -46,6 +57,8 @@ namespace MiddleEarthCompendium.ViewModels.Characters
                 IsLoadingWiki = true;
                 CharacterImageUrl = null;
                 CharacterBio = null;
+                HasNoImage = false;
+                HasNoBio = false;
 
                 var characterTask = _lotrApiService.GetCharacterAsync(characterId);
                 var quotesTask = _lotrApiService.GetCharacterQuotesAsync(characterId);
@@ -54,15 +67,11 @@ namespace MiddleEarthCompendium.ViewModels.Characters
                 Title = Character?.Name ?? "Character";
 
                 var wikiTask = !string.IsNullOrEmpty(Character?.WikiUrl)
-                    ? _wikiScraperService.GetCharacterInfoAsync(Character.WikiUrl)
+                    ? _wikiApiService.GetCharacterInfoAsync(Character.WikiUrl)
                     : Task.FromResult<WikiCharacterInfo?>(null);
 
-                var quotes = await quotesTask;
-                Quotes.Clear();
-                foreach (var quote in quotes)
-                {
-                    Quotes.Add(quote);
-                }
+                _allQuotes = (await quotesTask).ToList();
+                LoadRandomQuotes();
 
                 IsBusy = false;
 
@@ -72,6 +81,9 @@ namespace MiddleEarthCompendium.ViewModels.Characters
                     CharacterImageUrl = wikiInfo.ImageUrl;
                     CharacterBio = wikiInfo.Bio;
                 }
+
+                HasNoImage = string.IsNullOrEmpty(CharacterImageUrl);
+                HasNoBio = string.IsNullOrEmpty(CharacterBio);
             }
             catch (Exception ex)
             {
@@ -81,6 +93,40 @@ namespace MiddleEarthCompendium.ViewModels.Characters
             {
                 IsBusy = false;
                 IsLoadingWiki = false;
+            }
+        }
+
+        private void LoadRandomQuotes()
+        {
+            Quotes.Clear();
+
+            if (_allQuotes.Count <= 10)
+            {
+                foreach (var quote in _allQuotes)
+                {
+                    Quotes.Add(quote);
+                }
+                QuotesHeader = "Quotes";
+                HasMoreQuotes = false;
+            }
+            else
+            {
+                var randomQuotes = _allQuotes.OrderBy(_ => _random.Next()).Take(10);
+                foreach (var quote in randomQuotes)
+                {
+                    Quotes.Add(quote);
+                }
+                QuotesHeader = "Quotes";
+                HasMoreQuotes = true;
+            }
+        }
+
+        [RelayCommand]
+        private void ShuffleQuotes()
+        {
+            if (_allQuotes.Count > 10)
+            {
+                LoadRandomQuotes();
             }
         }
 

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MiddleEarthCompendium.ViewModels.Movies"
+             xmlns:models="clr-namespace:Infrastructure.Models;assembly=Infrastructure"
+             x:Class="MiddleEarthCompendium.Views.Movies.MoviesPage"
+             x:DataType="viewmodels:MoviesViewModel"
+             Title="{Binding Title}">
+
+    <Grid>
+        <!-- Background Map -->
+        <Image Source="middleearth.png" 
+               Aspect="AspectFill"/>
+
+        <CollectionView ItemsSource="{Binding Movies}"
+                        Margin="16">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Movie">
+                    <Border Margin="0,0,0,12" 
+                            Padding="16" 
+                            BackgroundColor="{StaticResource CardBackground}"
+                            Stroke="{StaticResource Primary}"
+                            StrokeShape="RoundRectangle 8">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer 
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MoviesViewModel}}, Path=GoToMovieDetailCommand}"
+                                CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                            <!-- Movie Name -->
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="{Binding Name}"
+                                   FontFamily="Ringbearer"
+                                   FontSize="18"
+                                   TextColor="{StaticResource Primary}"/>
+
+                            <!-- RT Score -->
+                            <Label Grid.Row="0" Grid.Column="1"
+                                   Text="{Binding RottenTomatoesScore, StringFormat='{0}% 🍅'}"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   VerticalOptions="Center"/>
+
+                            <!-- Runtime & Box Office -->
+                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                   TextColor="{StaticResource TextSecondary}"
+                                   FontSize="13"
+                                   Margin="0,4,0,0">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}{0} min • ${1:N0}M box office">
+                                        <Binding Path="RuntimeInMinutes"/>
+                                        <Binding Path="BoxOfficeRevenueInMillions"/>
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+
+                            <!-- Academy Awards -->
+                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                   TextColor="{StaticResource TextSecondary}"
+                                   FontSize="13"
+                                   Margin="0,2,0,0">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="🏆 {0} wins / {1} nominations">
+                                        <Binding Path="AcademyAwardWins"/>
+                                        <Binding Path="AcademyAwardNominations"/>
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <Label Text="No movies found" 
+                       TextColor="{StaticResource TextSecondary}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+        <!-- Loading Indicator -->
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Color="{StaticResource Primary}"/>
+    </Grid>
+
+</ContentPage>

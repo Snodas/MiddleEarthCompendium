@@ -40,7 +40,7 @@ namespace Infrastructure
                     new AuthenticationHeaderValue("Bearer", apiOptions?.ApiKey);
             });
 
-            services.AddHttpClient<IWikiScraperService, WikiScraperService>();
+            services.AddHttpClient<IWikiApiService, WikiApiService>();
 
             return services;
         }

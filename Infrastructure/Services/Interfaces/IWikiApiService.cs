@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Infrastructure.Services.Interfaces
 {
-    public interface IWikiScraperService
+    public interface IWikiApiService
     {
         Task<WikiCharacterInfo?> GetCharacterInfoAsync(string wikiUrl);
     }

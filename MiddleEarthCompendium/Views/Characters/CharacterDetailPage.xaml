@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MiddleEarthCompendium.ViewModels.Characters"
              xmlns:models="clr-namespace:Infrastructure.Models;assembly=Infrastructure"
-             x:Class="MiddleEarthCompendium.Views.CharacterDetailPage"
+             x:Class="MiddleEarthCompendium.Views.Characters.CharacterDetailPage"
              x:DataType="viewmodels:CharacterDetailViewModel">
 
     <Grid>
@@ -12,7 +12,7 @@
                Aspect="AspectFill"/>
 
         <ScrollView>
-            <Grid Padding="16" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*">
+            <Grid Padding="16" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
 
                 <!-- Character Name -->
                 <Label Grid.Row="0"
@@ -35,15 +35,23 @@
                     <Grid>
                         <!-- Loading spinner for image -->
                         <ActivityIndicator IsRunning="{Binding IsLoadingWiki}"
-                           IsVisible="{Binding IsLoadingWiki}"
-                           Color="{StaticResource Primary}"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
+                                           IsVisible="{Binding IsLoadingWiki}"
+                                           Color="{StaticResource Primary}"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
 
                         <!-- Actual image -->
                         <Image Source="{Binding CharacterImageUrl}"
                                Aspect="AspectFill"
                                IsVisible="{Binding CharacterImageUrl, Converter={StaticResource StringNotEmptyConverter}}"/>
+
+                        <!-- No image placeholder -->
+                        <Label Text="No image available"
+                               TextColor="{StaticResource TextSecondary}"
+                               FontSize="12"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding HasNoImage}"/>
                     </Grid>
                 </Border>
 
@@ -98,6 +106,12 @@
                                TextColor="{StaticResource TextPrimary}"
                                LineBreakMode="WordWrap"
                                IsVisible="{Binding CharacterBio, Converter={StaticResource StringNotEmptyConverter}}"/>
+
+                        <!-- No bio available -->
+                        <Label Text="No biography available for this character."
+                               TextColor="{StaticResource TextSecondary}"
+                               FontAttributes="Italic"
+                               IsVisible="{Binding HasNoBio}"/>
                     </Grid>
                 </Border>
 
@@ -112,16 +126,30 @@
                         CornerRadius="8"
                         Margin="0,0,0,16"/>
 
-                <!-- Quotes Header -->
-                <Label Grid.Row="5"
-                       Text="Quotes"
-                       FontFamily="Ringbearer"
-                       FontSize="24"
-                       TextColor="{StaticResource Primary}"
-                       Margin="0,0,0,8"/>
+                <!-- Quotes Header with Shuffle Button -->
+                <Grid Grid.Row="5" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                    <Label Text="{Binding QuotesHeader}"
+                           FontFamily="Ringbearer"
+                           FontSize="24"
+                           TextColor="{StaticResource Primary}"
+                           VerticalOptions="Center"/>
+
+                    <Button Grid.Column="1"
+                            Text="Shuffle"
+                            Command="{Binding ShuffleQuotesCommand}"
+                            IsVisible="{Binding HasMoreQuotes}"
+                            BackgroundColor="{StaticResource CardBackground}"
+                            TextColor="{StaticResource Primary}"
+                            BorderColor="{StaticResource Primary}"
+                            BorderWidth="1"
+                            CornerRadius="8"
+                            FontSize="12"
+                            Padding="12,6"
+                            HeightRequest="36"/>
+                </Grid>
 
                 <!-- Quotes List -->
-                <CollectionView Grid.Row="6"
+                <CollectionView Grid.Row="7"
                                 ItemsSource="{Binding Quotes}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:Quote">
@@ -138,8 +166,9 @@
                     </CollectionView.ItemTemplate>
 
                     <CollectionView.EmptyView>
-                        <Label Text="No quotes found for this character" 
+                        <Label Text="No quotes found for this character." 
                                TextColor="{StaticResource TextSecondary}"
+                               FontAttributes="Italic"
                                HorizontalOptions="Center"
                                Margin="0,20,0,0"/>
                     </CollectionView.EmptyView>

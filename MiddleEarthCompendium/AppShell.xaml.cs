@@ -1,4 +1,6 @@
 ﻿using MiddleEarthCompendium.Views;
+using MiddleEarthCompendium.Views.Characters;
+using MiddleEarthCompendium.Views.Movies;
 
 namespace MiddleEarthCompendium
 {
@@ -9,6 +11,7 @@ namespace MiddleEarthCompendium
             InitializeComponent();
 
             Routing.RegisterRoute("characterdetail", typeof(CharacterDetailPage));
+            Routing.RegisterRoute("moviedetail", typeof(MovieDetailPage));
         }
     }
 }

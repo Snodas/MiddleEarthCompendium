@@ -1,6 +1,6 @@
 using MiddleEarthCompendium.ViewModels;
 
-namespace MiddleEarthCompendium.Views;
+namespace MiddleEarthCompendium.Views.Characters;
 
 public partial class CharactersPage : ContentPage
 {

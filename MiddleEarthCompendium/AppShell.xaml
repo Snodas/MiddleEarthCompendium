@@ -4,11 +4,13 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:MiddleEarthCompendium"
-    xmlns:views="clr-namespace:MiddleEarthCompendium.Views"
+    xmlns:characters="clr-namespace:MiddleEarthCompendium.Views.Characters"
+    xmlns:movies="clr-namespace:MiddleEarthCompendium.Views.Movies"
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False">
 
     <ShellContent Route="main" ContentTemplate="{DataTemplate local:MainPage}"/>
-    <ShellContent Route="characters" ContentTemplate="{DataTemplate views:CharactersPage}"/>
+    <ShellContent Route="characters" ContentTemplate="{DataTemplate characters:CharactersPage}"/>
+    <ShellContent Route="movies" ContentTemplate="{DataTemplate movies:MoviesPage}"/>
 
 </Shell>

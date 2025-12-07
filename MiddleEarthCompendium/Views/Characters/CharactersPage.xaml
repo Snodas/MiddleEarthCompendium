@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MiddleEarthCompendium.ViewModels"
              xmlns:models="clr-namespace:Infrastructure.Models;assembly=Infrastructure"
-             x:Class="MiddleEarthCompendium.Views.CharactersPage"
+             x:Class="MiddleEarthCompendium.Views.Characters.CharactersPage"
              x:DataType="viewmodels:CharactersViewModel">
 
     <Grid>
@@ -107,7 +107,6 @@
                 </CollectionView.EmptyView>
             </CollectionView>
 
-            <!-- Loading Indicator -->
             <ActivityIndicator Grid.RowSpan="4"
                                IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"

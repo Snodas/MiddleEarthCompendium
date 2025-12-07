@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MiddleEarthCompendium.ViewModels.Movies"
+             xmlns:models="clr-namespace:Infrastructure.Models;assembly=Infrastructure"
+             x:Class="MiddleEarthCompendium.Views.Movies.MovieDetailPage"
+             x:DataType="viewmodels:MovieDetailViewModel">
+
+    <Grid>
+        <!-- Background Map -->
+        <Image Source="middleearth.png" 
+               Aspect="AspectFill"/>
+
+        <ScrollView>
+            <Grid Padding="16" RowDefinitions="Auto,Auto,Auto,Auto,*">
+
+                <!-- Movie Name -->
+                <Label Grid.Row="0"
+                       Text="{Binding Movie.Name}"
+                       FontFamily="Ringbearer"
+                       FontSize="28"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,0,0,16"/>
+
+                <!-- Movie Stats Card -->
+                <Border Grid.Row="1"
+                        BackgroundColor="{StaticResource CardBackground}"
+                        Stroke="{StaticResource Primary}"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="16"
+                        Margin="0,0,0,8">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" 
+                          ColumnDefinitions="Auto,*" 
+                          RowSpacing="8" 
+                          ColumnSpacing="16">
+
+                        <Label Grid.Row="0" Grid.Column="0" Text="Runtime:" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Movie.RuntimeInMinutes, StringFormat='{0} minutes'}" TextColor="{StaticResource TextPrimary}"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" Text="Budget:" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding Movie.BudgetInMillions, StringFormat='${0}M'}" TextColor="{StaticResource TextPrimary}"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" Text="Box Office:" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding Movie.BoxOfficeRevenueInMillions, StringFormat='${0}M'}" TextColor="{StaticResource TextPrimary}"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" Text="Rotten Tomatoes:" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding Movie.RottenTomatoesScore, StringFormat='{0}%'}" TextColor="{StaticResource TextPrimary}"/>
+
+                        <Label Grid.Row="4" Grid.Column="0" Text="Academy Awards:" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="4" Grid.Column="1" TextColor="{StaticResource TextPrimary}">
+                            <Label.Text>
+                                <MultiBinding StringFormat="{}{0} wins / {1} nominations">
+                                    <Binding Path="Movie.AcademyAwardWins"/>
+                                    <Binding Path="Movie.AcademyAwardNominations"/>
+                                </MultiBinding>
+                            </Label.Text>
+                        </Label>
+                    </Grid>
+                </Border>
+
+                <!-- Quotes Header -->
+                <Label Grid.Row="3"
+                       Text="Quotes"
+                       FontFamily="Ringbearer"
+                       FontSize="24"
+                       TextColor="{StaticResource Primary}"
+                       Margin="0,16,0,8"/>
+
+                <!-- Quotes List -->
+                <CollectionView Grid.Row="4"
+                                ItemsSource="{Binding Quotes}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Quote">
+                            <Border Margin="0,0,0,8" 
+                                    Padding="12" 
+                                    BackgroundColor="{StaticResource CardBackground}"
+                                    Stroke="{StaticResource Primary}"
+                                    StrokeShape="RoundRectangle 8">
+                                <Label Text="{Binding Dialog}" 
+                                       TextColor="{StaticResource TextPrimary}"
+                                       FontAttributes="Italic"/>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                    <CollectionView.EmptyView>
+                        <Label Text="No quotes found for this movie." 
+                               TextColor="{StaticResource TextSecondary}"
+                               FontAttributes="Italic"
+                               HorizontalOptions="Center"
+                               Margin="0,20,0,0"/>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </Grid>
+        </ScrollView>
+
+        <!-- Loading Indicator -->
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Color="{StaticResource Primary}"/>
+    </Grid>
+
+</ContentPage>

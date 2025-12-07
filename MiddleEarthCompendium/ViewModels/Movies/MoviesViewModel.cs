@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Infrastructure.Models;
 using Infrastructure.Services.Interfaces;
 using System;
@@ -15,15 +16,13 @@ namespace MiddleEarthCompendium.ViewModels.Movies
         [ObservableProperty]
         private ObservableCollection<Movie> _movies = [];
 
-        [ObservableProperty]
-        private Movie? _selectedMovie;
-
         public MoviesViewModel(ILotrApiService lotrApiService)
         {
             _lotrApiService = lotrApiService;
             Title = "Movies";
         }
 
+        [RelayCommand]
         private async Task LoadMoviesAsync()
         {
             if (IsBusy) return;
@@ -35,7 +34,7 @@ namespace MiddleEarthCompendium.ViewModels.Movies
                 var movies = await _lotrApiService.GetMoviesAsync();
 
                 Movies.Clear();
-                foreach (var movie in movies)
+                foreach (var movie in movies.OrderBy(m => m.Name))
                 {
                     Movies.Add(movie);
                 }
@@ -49,5 +48,14 @@ namespace MiddleEarthCompendium.ViewModels.Movies
                 IsBusy = false;
             }
         }
+
+        [RelayCommand]
+        private async Task GoToMovieDetailAsync(Movie movie)
+        {
+            if (movie == null) return;
+
+            await Shell.Current.GoToAsync($"moviedetail?id={movie._id}");
+        }
     }
 }
+

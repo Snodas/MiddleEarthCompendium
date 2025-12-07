@@ -1,6 +1,6 @@
 using MiddleEarthCompendium.ViewModels.Characters;
 
-namespace MiddleEarthCompendium.Views;
+namespace MiddleEarthCompendium.Views.Characters;
 
 [QueryProperty(nameof(CharacterId), "id")]
 public partial class CharacterDetailPage : ContentPage
