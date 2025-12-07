@@ -12,13 +12,15 @@ namespace MiddleEarthCompendium.ViewModels.Movies
     public partial class MoviesViewModel : BaseViewModel
     {
         private readonly ILotrApiService _lotrApiService;
+        private readonly ITmdbService _tmdbService;
 
         [ObservableProperty]
         private ObservableCollection<Movie> _movies = [];
 
-        public MoviesViewModel(ILotrApiService lotrApiService)
+        public MoviesViewModel(ILotrApiService lotrApiService, ITmdbService tmdbService)
         {
             _lotrApiService = lotrApiService;
+            _tmdbService = tmdbService;
             Title = "Movies";
         }
 
@@ -32,9 +34,20 @@ namespace MiddleEarthCompendium.ViewModels.Movies
                 IsBusy = true;
 
                 var movies = await _lotrApiService.GetMoviesAsync();
+                var sortedMovies = movies.OrderBy(m => m.Name).ToList();
+
+                var posterUrls = await _tmdbService.GetAllMoviePostersAsync(sortedMovies.Select(m => m.Name));
+
+                foreach (var movie in sortedMovies)
+                {
+                    if (posterUrls.TryGetValue(movie.Name, out var posterUrl))
+                    {
+                        movie.PosterUrl = posterUrl;
+                    }
+                }
 
                 Movies.Clear();
-                foreach (var movie in movies.OrderBy(m => m.Name))
+                foreach (var movie in sortedMovies)
                 {
                     Movies.Add(movie);
                 }

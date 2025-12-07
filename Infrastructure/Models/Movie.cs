@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Infrastructure.Models
 {
@@ -14,5 +15,8 @@ namespace Infrastructure.Models
         public int AcademyAwardNominations { get; set; }
         public int AcademyAwardWins { get; set; }
         public double RottenTomatoesScore { get; set; }
+
+        [JsonIgnore]
+        public string? PosterUrl { get; set; }
     }
 }

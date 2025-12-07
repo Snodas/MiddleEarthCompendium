@@ -7,14 +7,11 @@
              x:DataType="viewmodels:CharactersViewModel">
 
     <Grid>
-        <!-- Background Map -->
         <Image Source="middleearth.png" 
                Aspect="AspectFill"/>
 
-        <!-- Content -->
         <Grid Padding="16" RowDefinitions="Auto,Auto,Auto,*">
 
-            <!-- Title -->
             <Label Grid.Row="0"
                    Text="Characters"
                    FontFamily="Ringbearer"
@@ -23,7 +20,6 @@
                    HorizontalOptions="Center"
                    Margin="0,0,0,8"/>
 
-            <!-- Search Bar -->
             <Border Grid.Row="1"
                     BackgroundColor="{StaticResource CardBackground}"
                     Stroke="{StaticResource Primary}"
@@ -36,9 +32,7 @@
                        PlaceholderColor="{StaticResource TextSecondary}"/>
             </Border>
 
-            <!-- Filters -->
             <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,0,0,16">
-                <!-- Race Filter -->
                 <Border Grid.Column="0"
                         BackgroundColor="{StaticResource CardBackground}"
                         Stroke="{StaticResource Primary}"
@@ -51,7 +45,6 @@
                             TitleColor="{StaticResource TextSecondary}"/>
                 </Border>
 
-                <!-- Sort Order -->
                 <Border Grid.Column="1"
                         BackgroundColor="{StaticResource CardBackground}"
                         Stroke="{StaticResource Primary}"
@@ -65,7 +58,6 @@
                 </Border>
             </Grid>
 
-            <!-- Characters List -->
             <CollectionView Grid.Row="3"
                             ItemsSource="{Binding Characters}">
                 <CollectionView.ItemTemplate>

@@ -7,14 +7,12 @@
              x:DataType="viewmodels:CharacterDetailViewModel">
 
     <Grid>
-        <!-- Background Map -->
         <Image Source="middleearth.png" 
                Aspect="AspectFill"/>
 
         <ScrollView>
             <Grid Padding="16" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
 
-                <!-- Character Name -->
                 <Label Grid.Row="0"
                        Text="{Binding Character.Name}"
                        FontFamily="Ringbearer"
@@ -23,7 +21,6 @@
                        HorizontalOptions="Center"
                        Margin="0,0,0,16"/>
 
-                <!-- Character Image -->
                 <Border Grid.Row="1"
                     BackgroundColor="{StaticResource CardBackground}"
                     Stroke="{StaticResource Primary}"
@@ -33,19 +30,16 @@
                     HorizontalOptions="Center"
                     Margin="0,0,0,16">
                     <Grid>
-                        <!-- Loading spinner for image -->
                         <ActivityIndicator IsRunning="{Binding IsLoadingWiki}"
                                            IsVisible="{Binding IsLoadingWiki}"
                                            Color="{StaticResource Primary}"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
 
-                        <!-- Actual image -->
                         <Image Source="{Binding CharacterImageUrl}"
                                Aspect="AspectFill"
                                IsVisible="{Binding CharacterImageUrl, Converter={StaticResource StringNotEmptyConverter}}"/>
 
-                        <!-- No image placeholder -->
                         <Label Text="No image available"
                                TextColor="{StaticResource TextSecondary}"
                                FontSize="12"
@@ -55,7 +49,6 @@
                     </Grid>
                 </Border>
 
-                <!-- Character Info Card -->
                 <Border Grid.Row="2"
                         BackgroundColor="{StaticResource CardBackground}"
                         Stroke="{StaticResource Primary}"
@@ -87,7 +80,6 @@
                     </Grid>
                 </Border>
 
-                <!-- Bio -->
                 <Border Grid.Row="3"
                         BackgroundColor="{StaticResource CardBackground}"
                         Stroke="{StaticResource Primary}"
@@ -95,19 +87,16 @@
                         Padding="16"
                         Margin="0,0,0,8">
                     <Grid>
-                        <!-- Loading text -->
                         <Label Text="Loading bio..."
                                TextColor="{StaticResource TextSecondary}"
                                FontAttributes="Italic"
                                IsVisible="{Binding IsLoadingWiki}"/>
 
-                        <!-- Actual bio -->
                         <Label Text="{Binding CharacterBio}" 
                                TextColor="{StaticResource TextPrimary}"
                                LineBreakMode="WordWrap"
                                IsVisible="{Binding CharacterBio, Converter={StaticResource StringNotEmptyConverter}}"/>
 
-                        <!-- No bio available -->
                         <Label Text="No biography available for this character."
                                TextColor="{StaticResource TextSecondary}"
                                FontAttributes="Italic"
@@ -115,7 +104,6 @@
                     </Grid>
                 </Border>
 
-                <!-- Wiki Button -->
                 <Button Grid.Row="4"
                         Text="View on Wiki"
                         Command="{Binding OpenWikiCommand}"
@@ -126,7 +114,6 @@
                         CornerRadius="8"
                         Margin="0,0,0,16"/>
 
-                <!-- Quotes Header with Shuffle Button -->
                 <Grid Grid.Row="5" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
                     <Label Text="{Binding QuotesHeader}"
                            FontFamily="Ringbearer"
@@ -148,7 +135,6 @@
                             HeightRequest="36"/>
                 </Grid>
 
-                <!-- Quotes List -->
                 <CollectionView Grid.Row="7"
                                 ItemsSource="{Binding Quotes}">
                     <CollectionView.ItemTemplate>
@@ -176,7 +162,6 @@
             </Grid>
         </ScrollView>
 
-        <!-- Loading Indicator -->
         <ActivityIndicator IsRunning="{Binding IsBusy}"
                            IsVisible="{Binding IsBusy}"
                            HorizontalOptions="Center"

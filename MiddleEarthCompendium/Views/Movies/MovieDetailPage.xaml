@@ -7,30 +7,35 @@
              x:DataType="viewmodels:MovieDetailViewModel">
 
     <Grid>
-        <!-- Background Map -->
         <Image Source="middleearth.png" 
                Aspect="AspectFill"/>
 
         <ScrollView>
-            <Grid Padding="16" RowDefinitions="Auto,Auto,Auto,Auto,*">
+            <VerticalStackLayout Padding="16" Spacing="16">
 
-                <!-- Movie Name -->
-                <Label Grid.Row="0"
-                       Text="{Binding Movie.Name}"
-                       FontFamily="Ringbearer"
-                       FontSize="28"
-                       TextColor="{StaticResource Primary}"
-                       HorizontalOptions="Center"
-                       HorizontalTextAlignment="Center"
-                       Margin="0,0,0,16"/>
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="12">
+                    <Border StrokeShape="RoundRectangle 8"
+                            Stroke="{StaticResource Primary}"
+                            StrokeThickness="2"
+                            HeightRequest="300"
+                            WidthRequest="200"
+                            HorizontalOptions="Center">
+                        <Image Source="{Binding PosterUrl}"
+                               Aspect="AspectFill"/>
+                    </Border>
 
-                <!-- Movie Stats Card -->
-                <Border Grid.Row="1"
-                        BackgroundColor="{StaticResource CardBackground}"
+                    <Label Text="{Binding Movie.Name}"
+                           FontFamily="Ringbearer"
+                           FontSize="28"
+                           TextColor="{StaticResource Primary}"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+
+                <Border BackgroundColor="{StaticResource CardBackground}"
                         Stroke="{StaticResource Primary}"
                         StrokeShape="RoundRectangle 8"
-                        Padding="16"
-                        Margin="0,0,0,8">
+                        Padding="16">
                     <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" 
                           ColumnDefinitions="Auto,*" 
                           RowSpacing="8" 
@@ -46,12 +51,12 @@
                         <Label Grid.Row="2" Grid.Column="1" Text="{Binding Movie.BoxOfficeRevenueInMillions, StringFormat='${0}M'}" TextColor="{StaticResource TextPrimary}"/>
 
                         <Label Grid.Row="3" Grid.Column="0" Text="Rotten Tomatoes:" TextColor="{StaticResource TextSecondary}"/>
-                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding Movie.RottenTomatoesScore, StringFormat='{0}%'}" TextColor="{StaticResource TextPrimary}"/>
+                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding Movie.RottenTomatoesScore, StringFormat='{0:F0}% 🍅'}" TextColor="{StaticResource TextPrimary}"/>
 
                         <Label Grid.Row="4" Grid.Column="0" Text="Academy Awards:" TextColor="{StaticResource TextSecondary}"/>
                         <Label Grid.Row="4" Grid.Column="1" TextColor="{StaticResource TextPrimary}">
                             <Label.Text>
-                                <MultiBinding StringFormat="{}{0} wins / {1} nominations">
+                                <MultiBinding StringFormat="🏆 {0}W / {1}N">
                                     <Binding Path="Movie.AcademyAwardWins"/>
                                     <Binding Path="Movie.AcademyAwardNominations"/>
                                 </MultiBinding>
@@ -60,17 +65,12 @@
                     </Grid>
                 </Border>
 
-                <!-- Quotes Header -->
-                <Label Grid.Row="3"
-                       Text="Quotes"
+                <Label Text="Quotes"
                        FontFamily="Ringbearer"
                        FontSize="24"
-                       TextColor="{StaticResource Primary}"
-                       Margin="0,16,0,8"/>
+                       TextColor="{StaticResource Primary}"/>
 
-                <!-- Quotes List -->
-                <CollectionView Grid.Row="4"
-                                ItemsSource="{Binding Quotes}">
+                <CollectionView ItemsSource="{Binding Quotes}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:Quote">
                             <Border Margin="0,0,0,8" 
@@ -89,14 +89,13 @@
                         <Label Text="No quotes found for this movie." 
                                TextColor="{StaticResource TextSecondary}"
                                FontAttributes="Italic"
-                               HorizontalOptions="Center"
-                               Margin="0,20,0,0"/>
+                               HorizontalOptions="Center"/>
                     </CollectionView.EmptyView>
                 </CollectionView>
-            </Grid>
+
+            </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Loading Indicator -->
         <ActivityIndicator IsRunning="{Binding IsBusy}"
                            IsVisible="{Binding IsBusy}"
                            HorizontalOptions="Center"

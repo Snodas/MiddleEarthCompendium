@@ -5,7 +5,6 @@ using Infrastructure;
 using MiddleEarthCompendium.ViewModels.Characters;
 using MiddleEarthCompendium.ViewModels.Movies;
 using MiddleEarthCompendium.ViewModels.Quotes;
-using MiddleEarthCompendium.Views;
 using MiddleEarthCompendium.ViewModels;
 using MiddleEarthCompendium.Views.Movies;
 using MiddleEarthCompendium.Views.Characters;

@@ -16,6 +16,7 @@ namespace Infrastructure
             IConfiguration configuration)
         {
             services.Configure<ApiOptions>(configuration.GetSection("ApiOptions"));
+            services.Configure<TmdbOptions>(configuration.GetSection("TmdbOptions"));
             services.Configure<CacheConfiguration>(configuration.GetSection("CacheConfiguration"));
 
             var cacheConfig = configuration.GetSection("CacheConfiguration").Get<CacheConfiguration>()
@@ -41,6 +42,7 @@ namespace Infrastructure
             });
 
             services.AddHttpClient<IWikiApiService, WikiApiService>();
+            services.AddHttpClient<ITmdbService, TmdbService>();
 
             return services;
         }

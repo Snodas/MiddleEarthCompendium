@@ -12,6 +12,7 @@ namespace MiddleEarthCompendium.ViewModels.Movies
     public partial class MovieDetailViewModel : BaseViewModel
     {
         private readonly ILotrApiService _lotrApiService;
+        private readonly ITmdbService _tmdbService;
 
         [ObservableProperty]
         private Movie? _movie;
@@ -19,9 +20,13 @@ namespace MiddleEarthCompendium.ViewModels.Movies
         [ObservableProperty]
         private ObservableCollection<Quote> _quotes = [];
 
-        public MovieDetailViewModel(ILotrApiService lotrApiService)
+        [ObservableProperty]
+        private string? _posterUrl;
+
+        public MovieDetailViewModel(ILotrApiService lotrApiService, ITmdbService tmdbService)
         {
             _lotrApiService = lotrApiService;
+            _tmdbService = tmdbService;
         }
 
         [RelayCommand]
@@ -36,6 +41,12 @@ namespace MiddleEarthCompendium.ViewModels.Movies
                 Movie = await _lotrApiService.GetMovieAsync(movieId);
                 Title = Movie?.Name ?? "Movie";
 
+                // Fetch poster
+                if (Movie != null)
+                {
+                    PosterUrl = await _tmdbService.GetMoviePosterUrlAsync(Movie.Name, "w500");
+                }
+
                 var quotes = await _lotrApiService.GetMovieQuotesAsync(movieId);
 
                 Quotes.Clear();
@@ -46,7 +57,7 @@ namespace MiddleEarthCompendium.ViewModels.Movies
             }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
             }
             finally
             {

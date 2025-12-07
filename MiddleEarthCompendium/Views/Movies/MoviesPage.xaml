@@ -8,7 +8,6 @@
              Title="{Binding Title}">
 
     <Grid>
-        <!-- Background Map -->
         <Image Source="middleearth.png" 
                Aspect="AspectFill"/>
 
@@ -17,7 +16,7 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:Movie">
                     <Border Margin="0,0,0,12" 
-                            Padding="16" 
+                            Padding="12" 
                             BackgroundColor="{StaticResource CardBackground}"
                             Stroke="{StaticResource Primary}"
                             StrokeShape="RoundRectangle 8">
@@ -27,46 +26,56 @@
                                 CommandParameter="{Binding .}"/>
                         </Border.GestureRecognizers>
 
-                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
-                            <!-- Movie Name -->
-                            <Label Grid.Row="0" Grid.Column="0"
-                                   Text="{Binding Name}"
-                                   FontFamily="Ringbearer"
-                                   FontSize="18"
-                                   TextColor="{StaticResource Primary}"/>
+                        <Grid ColumnDefinitions="80,*" ColumnSpacing="12">
+                            <Border Grid.Column="0"
+                                    StrokeShape="RoundRectangle 4"
+                                    Stroke="{StaticResource Primary}"
+                                    StrokeThickness="1"
+                                    HeightRequest="120"
+                                    WidthRequest="80">
+                                <Image Source="{Binding PosterUrl}"
+                                       Aspect="AspectFill"/>
+                            </Border>
 
-                            <!-- RT Score -->
-                            <Label Grid.Row="0" Grid.Column="1"
-                                   Text="{Binding RottenTomatoesScore, StringFormat='{0}% 🍅'}"
-                                   FontSize="14"
-                                   TextColor="{StaticResource TextPrimary}"
-                                   VerticalOptions="Center"/>
+                            <Grid Grid.Column="1" 
+                                  RowDefinitions="Auto,Auto,Auto,Auto" 
+                                  RowSpacing="4"
+                                  VerticalOptions="Center">
 
-                            <!-- Runtime & Box Office -->
-                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                                   TextColor="{StaticResource TextSecondary}"
-                                   FontSize="13"
-                                   Margin="0,4,0,0">
-                                <Label.Text>
-                                    <MultiBinding StringFormat="{}{0} min • ${1:N0}M box office">
-                                        <Binding Path="RuntimeInMinutes"/>
-                                        <Binding Path="BoxOfficeRevenueInMillions"/>
-                                    </MultiBinding>
-                                </Label.Text>
-                            </Label>
+                                <Label Grid.Row="0"
+                                       Text="{Binding Name}"
+                                       FontFamily="Ringbearer"
+                                       FontSize="16"
+                                       TextColor="{StaticResource Primary}"
+                                       LineBreakMode="WordWrap"/>
 
-                            <!-- Academy Awards -->
-                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                                   TextColor="{StaticResource TextSecondary}"
-                                   FontSize="13"
-                                   Margin="0,2,0,0">
-                                <Label.Text>
-                                    <MultiBinding StringFormat="🏆 {0} wins / {1} nominations">
-                                        <Binding Path="AcademyAwardWins"/>
-                                        <Binding Path="AcademyAwardNominations"/>
-                                    </MultiBinding>
-                                </Label.Text>
-                            </Label>
+                                <Label Grid.Row="1"
+                                       Text="{Binding RottenTomatoesScore, StringFormat='{0:F0}% 🍅'}"
+                                       FontSize="14"
+                                       TextColor="{StaticResource TextPrimary}"/>
+
+                                <Label Grid.Row="2"
+                                       TextColor="{StaticResource TextSecondary}"
+                                       FontSize="13">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} min • ${1:N0}M">
+                                            <Binding Path="RuntimeInMinutes"/>
+                                            <Binding Path="BoxOfficeRevenueInMillions"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+
+                                <Label Grid.Row="3"
+                                       TextColor="{StaticResource TextSecondary}"
+                                       FontSize="13">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="🏆 {0}W / {1}N">
+                                            <Binding Path="AcademyAwardWins"/>
+                                            <Binding Path="AcademyAwardNominations"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </Grid>
                         </Grid>
                     </Border>
                 </DataTemplate>
@@ -80,7 +89,6 @@
             </CollectionView.EmptyView>
         </CollectionView>
 
-        <!-- Loading Indicator -->
         <ActivityIndicator IsRunning="{Binding IsBusy}"
                            IsVisible="{Binding IsBusy}"
                            HorizontalOptions="Center"
