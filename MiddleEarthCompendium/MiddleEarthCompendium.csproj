@@ -89,10 +89,9 @@
 	  <MauiXaml Update="Views\Movies\MoviesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Views\Quotes\" />
+	  <MauiXaml Update="Views\Quotes\QuotesPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>

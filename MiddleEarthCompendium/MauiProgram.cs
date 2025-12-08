@@ -8,6 +8,7 @@ using MiddleEarthCompendium.ViewModels.Quotes;
 using MiddleEarthCompendium.ViewModels;
 using MiddleEarthCompendium.Views.Movies;
 using MiddleEarthCompendium.Views.Characters;
+using MiddleEarthCompendium.Views.Quotes;
 
 namespace MiddleEarthCompendium;
 
@@ -58,6 +59,7 @@ public static class MauiProgram
         builder.Services.AddTransient<CharacterDetailPage>();
         builder.Services.AddTransient<MoviesPage>();
         builder.Services.AddTransient<MovieDetailPage>();
+        builder.Services.AddTransient<QuotesPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

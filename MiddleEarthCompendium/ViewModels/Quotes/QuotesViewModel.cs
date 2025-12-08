@@ -13,17 +13,30 @@ namespace MiddleEarthCompendium.ViewModels.Quotes
     {
         private readonly ILotrApiService _lotrApiService;
 
-        [ObservableProperty]
-        private ObservableCollection<Quote> _quotes = [];
+        private List<QuoteDisplayModel> _allQuotes = [];
+        private Dictionary<string, string> _characterNames = [];
+        private Dictionary<string, string> _movieNames = [];
 
         [ObservableProperty]
-        private Quote? _randomQuote;
+        private ObservableCollection<QuoteDisplayModel> _quotes = [];
+
+        [ObservableProperty]
+        private ObservableCollection<string> _movieOptions = [];
+
+        [ObservableProperty]
+        private string _selectedMovie = "All Movies";
+
+        [ObservableProperty]
+        private string _searchText = string.Empty;
 
         public QuotesViewModel(ILotrApiService lotrApiService)
         {
             _lotrApiService = lotrApiService;
             Title = "Quotes";
         }
+
+        partial void OnSelectedMovieChanged(string value) => ApplyFilters();
+        partial void OnSearchTextChanged(string value) => ApplyFilters();
 
         [RelayCommand]
         private async Task LoadQuotesAsync()
@@ -34,13 +47,32 @@ namespace MiddleEarthCompendium.ViewModels.Quotes
             {
                 IsBusy = true;
 
-                var quotes = await _lotrApiService.GetQuotesAsync(200);
+                var characters = await _lotrApiService.GetCharactersAsync(1000);
+                var movies = await _lotrApiService.GetMoviesAsync();
 
-                Quotes.Clear();
-                foreach (var quote in quotes)
+                _characterNames = characters.ToDictionary(c => c._id, c => c.Name);
+                _movieNames = movies.ToDictionary(m => m._id, m => m.Name);
+
+                MovieOptions.Clear();
+                MovieOptions.Add("All Movies");
+                foreach (var movie in movies.OrderBy(m => m.Name))
                 {
-                    Quotes.Add(quote);
+                    MovieOptions.Add(movie.Name);
                 }
+
+                var quotes = await _lotrApiService.GetQuotesAsync(500);
+
+                _allQuotes = quotes.Select(q => new QuoteDisplayModel
+                {
+                    Id = q._id,
+                    Dialog = q.Dialog,
+                    CharacterId = q.Character,
+                    CharacterName = _characterNames.GetValueOrDefault(q.Character, "Unknown"),
+                    MovieId = q.Movie,
+                    MovieName = _movieNames.GetValueOrDefault(q.Movie, "Unknown")
+                }).ToList();
+
+                ApplyFilters();
             }
             catch (Exception ex)
             {
@@ -52,27 +84,35 @@ namespace MiddleEarthCompendium.ViewModels.Quotes
             }
         }
 
-        [RelayCommand]
-        private async Task GetRandomQuoteAsync()
+        private void ApplyFilters()
         {
-            try
-            {
-                if (Quotes.Count == 0)
-                {
-                    await LoadQuotesAsync();
-                }
+            var filtered = _allQuotes.AsEnumerable();
 
-                if (Quotes.Count > 0)
-                {
-                    var random = new Random();
-                    RandomQuote = Quotes[random.Next(Quotes.Count)];
-                }
-            }
-            catch (Exception ex)
+            if (!string.IsNullOrEmpty(SelectedMovie) && SelectedMovie != "All Movies")
             {
-                await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+                filtered = filtered.Where(q => q.MovieName == SelectedMovie);
+            }
+
+            if (!string.IsNullOrEmpty(SearchText))
+            {
+                filtered = filtered.Where(q =>
+                    q.Dialog.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                    q.CharacterName.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
+            }
+
+            Quotes.Clear();
+            foreach (var quote in filtered.Take(100))
+            {
+                Quotes.Add(quote);
             }
         }
 
+        [RelayCommand]
+        private async Task GoToCharacterAsync(QuoteDisplayModel quote)
+        {
+            if (quote == null || string.IsNullOrEmpty(quote.CharacterId)) return;
+
+            await Shell.Current.GoToAsync($"characterdetail?id={quote.CharacterId}");
+        }
     }
 }

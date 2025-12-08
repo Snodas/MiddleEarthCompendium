@@ -6,11 +6,13 @@
     xmlns:local="clr-namespace:MiddleEarthCompendium"
     xmlns:characters="clr-namespace:MiddleEarthCompendium.Views.Characters"
     xmlns:movies="clr-namespace:MiddleEarthCompendium.Views.Movies"
+    xmlns:quotes="clr-namespace:MiddleEarthCompendium.Views.Quotes"
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False">
 
     <ShellContent Route="main" ContentTemplate="{DataTemplate local:MainPage}"/>
     <ShellContent Route="characters" ContentTemplate="{DataTemplate characters:CharactersPage}"/>
     <ShellContent Route="movies" ContentTemplate="{DataTemplate movies:MoviesPage}"/>
+    <ShellContent Route="quotes" ContentTemplate="{DataTemplate quotes:QuotesPage}"/>
 
 </Shell>

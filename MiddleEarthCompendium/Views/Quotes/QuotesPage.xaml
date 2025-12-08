@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MiddleEarthCompendium.ViewModels.Quotes"
+             xmlns:models="clr-namespace:Infrastructure.Models;assembly=Infrastructure"
+             x:Class="MiddleEarthCompendium.Views.Quotes.QuotesPage"
+             x:DataType="viewmodels:QuotesViewModel"
+             Title="{Binding Title}">
+
+    <Grid>
+        <Image Source="middleearth.png" 
+               Aspect="AspectFill"/>
+
+        <Grid RowDefinitions="Auto,Auto,*" Padding="16" RowSpacing="12">
+
+            <Border Grid.Row="0"
+                    BackgroundColor="{StaticResource CardBackground}"
+                    Stroke="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="8,4">
+                <Entry Placeholder="Search quotes or characters..."
+                       PlaceholderColor="{StaticResource TextSecondary}"
+                       Text="{Binding SearchText}"
+                       TextColor="{StaticResource TextPrimary}"
+                       BackgroundColor="Transparent"/>
+            </Border>
+
+            <Border Grid.Row="1"
+                    BackgroundColor="{StaticResource CardBackground}"
+                    Stroke="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="8,4">
+                <Picker ItemsSource="{Binding MovieOptions}"
+                        SelectedItem="{Binding SelectedMovie}"
+                        TextColor="{StaticResource TextPrimary}"
+                        BackgroundColor="Transparent"/>
+            </Border>
+
+            <CollectionView Grid.Row="2"
+                            ItemsSource="{Binding Quotes}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:QuoteDisplayModel">
+                        <Border Margin="0,0,0,8" 
+                                Padding="12" 
+                                BackgroundColor="{StaticResource CardBackground}"
+                                Stroke="{StaticResource Primary}"
+                                StrokeShape="RoundRectangle 8">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:QuotesViewModel}}, Path=GoToCharacterCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="{Binding Dialog}" 
+                                       TextColor="{StaticResource TextPrimary}"
+                                       FontAttributes="Italic"
+                                       LineBreakMode="WordWrap"/>
+
+                                <HorizontalStackLayout Spacing="16">
+                                    <Label TextColor="{StaticResource TextSecondary}" FontSize="13">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="👤 "/>
+                                                <Span Text="{Binding CharacterName}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                    <Label TextColor="{StaticResource TextSecondary}" FontSize="13">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="🎬 "/>
+                                                <Span Text="{Binding MovieName}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <Label Text="No quotes found" 
+                           TextColor="{StaticResource TextSecondary}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </Grid>
+
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Color="{StaticResource Primary}"/>
+    </Grid>
+
+</ContentPage>
