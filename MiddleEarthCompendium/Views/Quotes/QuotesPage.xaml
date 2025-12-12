@@ -11,9 +11,24 @@
         <Image Source="middleearth.png" 
                Aspect="AspectFill"/>
 
-        <Grid RowDefinitions="Auto,Auto,*" Padding="16" RowSpacing="12">
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" Padding="16" RowSpacing="12">
 
-            <Border Grid.Row="0"
+            <Button Grid.Row="0"
+                    Text="Home"
+                    Command="{Binding GoHomeCommand}"
+                    BackgroundColor="{StaticResource CardBackground}"
+                    TextColor="{StaticResource Primary}"
+                    CornerRadius="8"
+                    HorizontalOptions="Start"/>
+
+            <Label Grid.Row="1"
+                   Text="Quotes"
+                   FontFamily="Ringbearer"
+                   FontSize="32"
+                   TextColor="{StaticResource Primary}"
+                   HorizontalOptions="Center"/>
+
+            <Border Grid.Row="2"
                     BackgroundColor="{StaticResource CardBackground}"
                     Stroke="{StaticResource Primary}"
                     StrokeShape="RoundRectangle 8"
@@ -25,7 +40,7 @@
                        BackgroundColor="Transparent"/>
             </Border>
 
-            <Border Grid.Row="1"
+            <Border Grid.Row="3"
                     BackgroundColor="{StaticResource CardBackground}"
                     Stroke="{StaticResource Primary}"
                     StrokeShape="RoundRectangle 8"
@@ -36,7 +51,7 @@
                         BackgroundColor="Transparent"/>
             </Border>
 
-            <CollectionView Grid.Row="2"
+            <CollectionView Grid.Row="4"
                             ItemsSource="{Binding Quotes}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:QuoteDisplayModel">

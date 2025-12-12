@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,5 +15,11 @@ namespace MiddleEarthCompendium.ViewModels
 
         [ObservableProperty]
         private string _title = string.Empty;
+
+        [RelayCommand]
+        private async Task GoHomeAsync()
+        {
+            await Shell.Current.GoToAsync("//main");
+        }
     }
 }

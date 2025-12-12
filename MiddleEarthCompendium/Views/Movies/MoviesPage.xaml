@@ -11,89 +11,118 @@
         <Image Source="middleearth.png" 
                Aspect="AspectFill"/>
 
-        <CollectionView ItemsSource="{Binding Movies}"
-                        Margin="16">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:Movie">
-                    <Border Margin="0,0,0,12" 
-                            Padding="12" 
-                            BackgroundColor="{StaticResource CardBackground}"
-                            Stroke="{StaticResource Primary}"
-                            StrokeShape="RoundRectangle 8">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer 
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MoviesViewModel}}, Path=GoToMovieDetailCommand}"
-                                CommandParameter="{Binding .}"/>
-                        </Border.GestureRecognizers>
+        <Grid Padding="16" RowDefinitions="Auto,Auto,*">
 
-                        <Grid ColumnDefinitions="80,*" ColumnSpacing="12">
-                            <Border Grid.Column="0"
-                                    StrokeShape="RoundRectangle 4"
-                                    Stroke="{StaticResource Primary}"
-                                    StrokeThickness="1"
-                                    HeightRequest="120"
-                                    WidthRequest="80">
-                                <Image Source="{Binding PosterUrl}"
-                                       Aspect="AspectFill"/>
-                            </Border>
+            <Button Grid.Row="0"
+                    Text="Home"
+                    Command="{Binding GoHomeCommand}"
+                    BackgroundColor="{StaticResource CardBackground}"
+                    TextColor="{StaticResource Primary}"
+                    CornerRadius="8"
+                    HorizontalOptions="Start"
+                    Margin="0,0,0,8"/>
 
-                            <Grid Grid.Column="1" 
-                                  RowDefinitions="Auto,Auto,Auto,Auto" 
-                                  RowSpacing="4"
-                                  VerticalOptions="Center">
+            <Label Grid.Row="1"
+                   Text="Movies"
+                   FontFamily="Ringbearer"
+                   FontSize="32"
+                   TextColor="{StaticResource Primary}"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,8"/>
 
-                                <Label Grid.Row="0"
-                                       Text="{Binding Name}"
-                                       FontFamily="Ringbearer"
-                                       FontSize="16"
-                                       TextColor="{StaticResource Primary}"
-                                       LineBreakMode="WordWrap"/>
+            <CollectionView Grid.Row="2"
+                            ItemsSource="{Binding Movies}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Movie">
+                        <Border Margin="0,0,0,12" 
+                                Padding="12" 
+                                BackgroundColor="{StaticResource CardBackground}"
+                                Stroke="{StaticResource Primary}"
+                                StrokeShape="RoundRectangle 8">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MoviesViewModel}}, Path=GoToMovieDetailCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
 
-                                <Label Grid.Row="1"
-                                       Text="{Binding RottenTomatoesScore, StringFormat='{0:F0}% 🍅'}"
-                                       FontSize="14"
-                                       TextColor="{StaticResource TextPrimary}"/>
+                            <Grid ColumnDefinitions="80,*" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        StrokeShape="RoundRectangle 4"
+                                        Stroke="{StaticResource Primary}"
+                                        StrokeThickness="1"
+                                        HeightRequest="120"
+                                        WidthRequest="80">
+                                    <Image Source="{Binding PosterUrl}"
+                                           Aspect="AspectFill"/>
+                                </Border>
 
-                                <Label Grid.Row="2"
-                                       TextColor="{StaticResource TextSecondary}"
-                                       FontSize="13">
-                                    <Label.Text>
-                                        <MultiBinding StringFormat="{}{0} min • ${1:N0}M">
-                                            <Binding Path="RuntimeInMinutes"/>
-                                            <Binding Path="BoxOfficeRevenueInMillions"/>
-                                        </MultiBinding>
-                                    </Label.Text>
-                                </Label>
+                                <Grid Grid.Column="1" 
+                                      RowDefinitions="Auto,Auto,Auto,Auto" 
+                                      RowSpacing="4"
+                                      VerticalOptions="Center">
 
-                                <Label Grid.Row="3"
-                                       TextColor="{StaticResource TextSecondary}"
-                                       FontSize="13">
-                                    <Label.Text>
-                                        <MultiBinding StringFormat="🏆 {0}W / {1}N">
-                                            <Binding Path="AcademyAwardWins"/>
-                                            <Binding Path="AcademyAwardNominations"/>
-                                        </MultiBinding>
-                                    </Label.Text>
-                                </Label>
+                                    <Label Grid.Row="0"
+                                           Text="{Binding Name}"
+                                           FontFamily="Ringbearer"
+                                           FontSize="16"
+                                           TextColor="{StaticResource Primary}"
+                                           LineBreakMode="WordWrap"/>
+
+                                    <Label Grid.Row="1"
+                                           Text="{Binding RottenTomatoesScore, StringFormat='{0:F0}% 🍅'}"
+                                           FontSize="14"
+                                           TextColor="{StaticResource TextPrimary}"/>
+
+                                    <Label Grid.Row="2"
+                                           TextColor="{StaticResource TextSecondary}"
+                                           FontSize="13">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}{0} min • ${1:N0}M">
+                                                <Binding Path="RuntimeInMinutes"/>
+                                                <Binding Path="BoxOfficeRevenueInMillions"/>
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+
+                                    <Label Grid.Row="3"
+                                           TextColor="{StaticResource TextSecondary}"
+                                           FontSize="13">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="🏆 {0}W / {1}N">
+                                                <Binding Path="AcademyAwardWins"/>
+                                                <Binding Path="AcademyAwardNominations"/>
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
 
-            <CollectionView.EmptyView>
-                <Label Text="No movies found" 
-                       TextColor="{StaticResource TextSecondary}"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"/>
-            </CollectionView.EmptyView>
-        </CollectionView>
-
-        <ActivityIndicator IsRunning="{Binding IsBusy}"
-                           IsVisible="{Binding IsBusy}"
+                <CollectionView.EmptyView>
+                    <Label Text="No movies found" 
+                           TextColor="{StaticResource TextSecondary}"
                            HorizontalOptions="Center"
                            VerticalOptions="Center"
-                           Color="{StaticResource Primary}"/>
+                           IsVisible="{Binding HasLoaded}"/>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </Grid>
+
+        <VerticalStackLayout IsVisible="{Binding IsBusy}"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Spacing="16">
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               Color="{StaticResource Primary}"
+                               HeightRequest="50"
+                               WidthRequest="50"/>
+            <Label Text="Loading movies..."
+                   TextColor="{StaticResource TextPrimary}"
+                   FontSize="16"
+                   HorizontalOptions="Center"/>
+        </VerticalStackLayout>
     </Grid>
 
 </ContentPage>

@@ -10,9 +10,18 @@
         <Image Source="middleearth.png" 
                Aspect="AspectFill"/>
 
-        <Grid Padding="16" RowDefinitions="Auto,Auto,Auto,*">
+        <Grid Padding="16" RowDefinitions="Auto,Auto,Auto,Auto,*">
 
-            <Label Grid.Row="0"
+            <Button Grid.Row="0"
+                    Text="Home"
+                    Command="{Binding GoHomeCommand}"
+                    BackgroundColor="{StaticResource CardBackground}"
+                    TextColor="{StaticResource Primary}"
+                    CornerRadius="8"
+                    HorizontalOptions="Start"
+                    Margin="0,0,0,8"/>
+
+            <Label Grid.Row="1"
                    Text="Characters"
                    FontFamily="Ringbearer"
                    FontSize="32"
@@ -20,7 +29,7 @@
                    HorizontalOptions="Center"
                    Margin="0,0,0,8"/>
 
-            <Border Grid.Row="1"
+            <Border Grid.Row="2"
                     BackgroundColor="{StaticResource CardBackground}"
                     Stroke="{StaticResource Primary}"
                     StrokeShape="RoundRectangle 8"
@@ -32,7 +41,7 @@
                        PlaceholderColor="{StaticResource TextSecondary}"/>
             </Border>
 
-            <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,0,0,16">
+            <Grid Grid.Row="3" ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,0,0,16">
                 <Border Grid.Column="0"
                         BackgroundColor="{StaticResource CardBackground}"
                         Stroke="{StaticResource Primary}"
@@ -58,7 +67,7 @@
                 </Border>
             </Grid>
 
-            <CollectionView Grid.Row="3"
+            <CollectionView Grid.Row="4"
                             ItemsSource="{Binding Characters}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Character">
@@ -99,7 +108,7 @@
                 </CollectionView.EmptyView>
             </CollectionView>
 
-            <ActivityIndicator Grid.RowSpan="4"
+            <ActivityIndicator Grid.RowSpan="5"
                                IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
                                HorizontalOptions="Center"
