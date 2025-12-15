@@ -41,7 +41,6 @@ namespace MiddleEarthCompendium.ViewModels.Movies
                 Movie = await _lotrApiService.GetMovieAsync(movieId);
                 Title = Movie?.Name ?? "Movie";
 
-                // Fetch poster
                 if (Movie != null)
                 {
                     PosterUrl = await _tmdbService.GetMoviePosterUrlAsync(Movie.Name, "w500");

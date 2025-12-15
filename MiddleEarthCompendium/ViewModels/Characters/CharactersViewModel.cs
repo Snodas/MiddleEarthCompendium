@@ -2,17 +2,14 @@
 using CommunityToolkit.Mvvm.Input;
 using Infrastructure.Models;
 using Infrastructure.Services.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace MiddleEarthCompendium.ViewModels
 {
     public partial class CharactersViewModel : BaseViewModel
     {
         private readonly ILotrApiService _lotrApiService;
-        private List<Character> _allCharacters = [];
+        private List<Character> _currentCharacters = [];
 
         [ObservableProperty]
         private ObservableCollection<Character> _characters = [];
@@ -53,18 +50,27 @@ namespace MiddleEarthCompendium.ViewModels
         [RelayCommand]
         private async Task LoadCharactersAsync()
         {
+            await FetchCharactersAsync();
+        }
+
+        private async Task FetchCharactersAsync()
+        {
             if (IsBusy) return;
 
             try
             {
                 IsBusy = true;
 
-                if (_allCharacters.Count == 0)
+                if (SelectedRace == "All")
                 {
-                    _allCharacters = await _lotrApiService.GetCharactersAsync(1000);
+                    _currentCharacters = await _lotrApiService.GetCharactersAsync(1000);
+                }
+                else
+                {
+                    _currentCharacters = await _lotrApiService.GetCharactersByRaceAsync(SelectedRace);
                 }
 
-                ApplyFilters();
+                ApplyLocalFilters();
             }
             catch (Exception ex)
             {
@@ -76,15 +82,9 @@ namespace MiddleEarthCompendium.ViewModels
             }
         }
 
-        private void ApplyFilters()
+        private void ApplyLocalFilters()
         {
-            var filtered = _allCharacters.AsEnumerable();
-
-            if (SelectedRace != "All")
-            {
-                filtered = filtered.Where(c => !string.IsNullOrEmpty(c.Race) &&
-                                               c.Race.Equals(SelectedRace, StringComparison.OrdinalIgnoreCase));
-            }
+            var filtered = _currentCharacters.AsEnumerable();
 
             if (!string.IsNullOrWhiteSpace(SearchText))
             {
@@ -113,20 +113,19 @@ namespace MiddleEarthCompendium.ViewModels
 
         partial void OnSelectedRaceChanged(string value)
         {
-            if (_allCharacters.Count > 0)
-                ApplyFilters();
+            Task.Run(async () => await FetchCharactersAsync());
         }
 
         partial void OnSelectedSortChanged(string value)
         {
-            if (_allCharacters.Count > 0)
-                ApplyFilters();
+            if (_currentCharacters.Count > 0)
+                ApplyLocalFilters();
         }
 
         partial void OnSearchTextChanged(string value)
         {
-            if (_allCharacters.Count > 0)
-                ApplyFilters();
+            if (_currentCharacters.Count > 0)
+                ApplyLocalFilters();
         }
     }
 }
