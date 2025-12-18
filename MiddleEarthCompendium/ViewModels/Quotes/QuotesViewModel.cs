@@ -60,7 +60,7 @@ namespace MiddleEarthCompendium.ViewModels.Quotes
                     MovieOptions.Add(movie.Name);
                 }
 
-                var quotes = await _lotrApiService.GetQuotesAsync(500);
+                var quotes = await _lotrApiService.GetQuotesAsync(2000);
 
                 _allQuotes = quotes.Select(q => new QuoteDisplayModel
                 {
@@ -101,7 +101,7 @@ namespace MiddleEarthCompendium.ViewModels.Quotes
             }
 
             Quotes.Clear();
-            foreach (var quote in filtered.Take(100))
+            foreach (var quote in filtered.Take(200))
             {
                 Quotes.Add(quote);
             }
